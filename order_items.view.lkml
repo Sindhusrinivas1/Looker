@@ -60,7 +60,7 @@ view: order_items {
     sql: ${TABLE}."RETURNED_AT" ;;
   }
 
-  dimension: sale_price {
+  measure: sale_price {
     type: number
     sql: ${TABLE}."SALE_PRICE" ;;
   }
