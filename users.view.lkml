@@ -79,6 +79,7 @@ view: users {
   dimension: state {
     map_layer_name: us_states
     sql: ${TABLE}."STATE" ;;
+    drill_fields: [city,zip]
   }
 
   dimension: traffic_source {
