@@ -64,10 +64,6 @@ view: inventory_items {
     sql: ${TABLE}."PRODUCT_DEPARTMENT" ;;
   }
 
-  dimension: product_distribution_center_id {
-    type: number
-    sql: ${TABLE}."PRODUCT_DISTRIBUTION_CENTER_ID" ;;
-  }
 
   dimension: product_id {
     type: number
