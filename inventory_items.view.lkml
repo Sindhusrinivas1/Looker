@@ -77,7 +77,7 @@ view: inventory_items {
   }
 
   measure: product_retail_price {
-    type: number
+    type: sum
     sql: ${TABLE}."PRODUCT_RETAIL_PRICE" ;;
   }
 
