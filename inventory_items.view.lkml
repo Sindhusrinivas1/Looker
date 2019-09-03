@@ -3,9 +3,9 @@ view: inventory_items {
 
 
     parameter: date_granularity {
-    type: unquoted
-    allowed_value: { label: "Break down by Weekly" value: "Weekly" }
-    allowed_value: { label: "Break down by Month" value: "Monthly" }
+    type: string
+    allowed_value: { label: "By Weekly" value: "Weekly" }
+    allowed_value: { label: "By Monthly" value: "Monthly" }
   }
 
   dimension: date {
@@ -21,6 +21,13 @@ view: inventory_items {
 
 
 
+  dimension: date_check {
+    type: yesno
+    sql: (case when {% parameter date_granularity %} = 'Monthly'
+    then ${created_date} > CURRENT_DATE() + INTERVAL '- 6 months'
+      when {% parameter date_granularity %} = 'Weekly'
+      then ${created_date} > CURRENT_DATE() + INTERVAL '- 12 weeks' end)  ;;
+  }
 
   dimension: id {
     primary_key: yes
@@ -42,6 +49,8 @@ view: inventory_items {
       week,
       month,
       quarter,
+      month_name,
+      week_of_year,
       year
     ]
     sql: ${TABLE}."CREATED_AT" ;;
@@ -76,10 +85,7 @@ view: inventory_items {
     sql: ${TABLE}."PRODUCT_NAME" ;;
   }
 
-  measure: product_retail_price {
-    type: sum
-    sql: ${TABLE}."PRODUCT_RETAIL_PRICE" ;;
-  }
+
 
   dimension: product_sku {
     type: string
@@ -100,8 +106,19 @@ view: inventory_items {
     sql: ${TABLE}."SOLD_AT" ;;
   }
 
+
+
+  measure: product_retail_price {
+    type: sum
+    sql: ${TABLE}."PRODUCT_RETAIL_PRICE" ;;
+    filters: {
+      field: date_check
+      value: "yes"
+    }
+  }
+
   measure: count {
     type: count
     drill_fields: [id, product_name, products.id, products.name, order_items.count]
   }
-}
+  }
